@@ -1,0 +1,20 @@
+    # kustomization.yaml
+    apiVersion: kustomize.config.k8s.io/v1beta1
+    kind: Kustomization
+
+    # 包含所有需要应用的基础资源文件
+    resources:
+    - deployment.yaml
+    - service.yaml # 假设你有一个 Service 定义
+    - hpa.yaml     # --- 添加 HPA 文件 ---
+    # - configmap.yaml # 如果你用 ConfigMap 管理配置
+    # - secret.yaml    # 如果你用 Secret 管理敏感信息 (通常应手动创建 Secret)
+
+    # 定义镜像替换规则，这里的名称/标签是占位符
+    images:
+    - name: YOUR_IMAGE_PLACEHOLDER # --- 必须与 deployment.yaml 中的占位符一致 ---
+      newName: registry/namespace/image # 不会被直接使用，会被 pipeline 覆盖
+      newTag: latest # 不会被直接使用，会被 pipeline 覆盖
+
+    # 你可能还有其他 Kustomize 配置，例如命名空间、标签等
+    # namespace: my-app-namespace

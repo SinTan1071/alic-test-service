@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sintan1071-test-alic-db-service # 确保与 ACK_DEPLOYMENT_NAME 环境变量匹配
+  labels:
+    app: sintan1071-test-alic-db-service
+spec:
+  replicas: 2 # --- 设置最小副本数为 2 ---
+  selector:
+    matchLabels:
+      app: sintan1071-test-alic-db-service
+  template:
+    metadata:
+      labels:
+        app: sintan1071-test-alic-db-service
+    spec:
+      containers:
+      - name: app # 确保容器名称正确
+        image: YOUR_IMAGE_PLACEHOLDER # Kustomize 会替换这里
+        ports:
+        - containerPort: 8080
+        # --- 必须添加资源请求，HPA 才能计算利用率 ---
+        resources:
+          requests:
+            cpu: "200m" # 示例值：200 millicores (0.2 CPU)
+            memory: "64Mi" # 示例值：256 Mebibytes
+          limits: # 通常也建议设置 limits
+            cpu: "500m"
+            memory: "512Mi"
+        # --- 环境变量可以通过 ConfigMap 和 Secret 注入 (如之前讨论) ---
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_PASSWORD
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: db-config
+              key: DB_HOST
+        # ... 其他环境变量 ...

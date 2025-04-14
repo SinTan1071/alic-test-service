@@ -1,0 +1,28 @@
+# --- HPA (Horizontal Pod Autoscaler) 配置 ---
+# 此文件定义了应用的自动扩缩容策略
+# 当 CPU 或内存使用率达到阈值时，HPA 会自动调整 Pod 数量
+# 注意：要确保 deployment.yaml 中设置了 resources.requests 才能正常工作
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: sintan1071-test-alic-db-service-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sintan1071-test-alic-db-service # --- 确保指向正确的 Deployment 名称 ---
+  minReplicas: 2 # --- 最小副本数 ---
+  maxReplicas: 10 # --- 最大副本数 (根据需要调整) ---
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 20 # --- CPU 目标利用率 80% ---
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 20 # --- 内存目标利用率 80% ---
