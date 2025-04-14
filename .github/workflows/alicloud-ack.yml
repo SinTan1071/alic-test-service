@@ -47,9 +47,14 @@ jobs:
 
     # --- 修改：使用 docker login 和用户名/密码 ---
     - name: Login to ACR with Username and Password
+      env:
+        # 从 Secrets 获取用户名和密码
+        ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+        ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
       run: |
         # 使用 --password-stdin 更安全，避免密码出现在进程列表或日志中
-        docker login --username ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }} ${{ env.REGISTRY }}
+        echo "$ACR_PASSWORD"
+        echo "$ACR_PASSWORD" | docker login --username "$ACR_USERNAME" --password-stdin ${{ env.REGISTRY }}
 
     # 1.2 Build and push image to ACR
     - name: Build and push image to ACR
