@@ -105,7 +105,8 @@ jobs:
     # 3.2 Deploy the image to the ACK cluster
     - name: Set up Kustomize
       run: |-
-        curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash /dev/stdin 3.8.6
+        # 安装最新稳定版的 Kustomize
+        curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
     - name: Deploy Application to ACK
       env:
           # 需要从 build job 获取 tag, 或者直接使用 env.TAG

@@ -5,7 +5,6 @@
     # 包含所有需要应用的基础资源文件
     resources:
     - deployment.yaml
-    - service.yaml # 假设你有一个 Service 定义
     - hpa.yaml     # --- 添加 HPA 文件 ---
     # - configmap.yaml # 如果你用 ConfigMap 管理配置
     # - secret.yaml    # 如果你用 Secret 管理敏感信息 (通常应手动创建 Secret)
