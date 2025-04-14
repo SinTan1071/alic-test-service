@@ -24,6 +24,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py .
 COPY src ./src
 # 构建完成后删除镜像中的配置文件
+RUN pip install --no-cache-dir -e ./src
 
 # 6. 暴露端口
 # 声明容器将监听 8080 端口
