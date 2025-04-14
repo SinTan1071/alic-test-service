@@ -53,7 +53,6 @@ jobs:
         ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
       run: |
         # 使用 --password-stdin 更安全，避免密码出现在进程列表或日志中
-        echo "$ACR_PASSWORD"
         echo "$ACR_PASSWORD" | docker login --username "$ACR_USERNAME" --password-stdin ${{ env.REGISTRY }}
 
     # 1.2 Build and push image to ACR
@@ -109,6 +108,8 @@ jobs:
         curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash /dev/stdin 3.8.6
     - name: Deploy
       run: |-
+        echo $REGISTRY/$NAMESPACE/$IMAGE:$TAG
+        echo $DB_USER
         ./kustomize edit set image REGISTRY/NAMESPACE/IMAGE:TAG=$REGISTRY/$NAMESPACE/$IMAGE:$TAG
         ./kustomize build . | kubectl apply -f -
         kubectl rollout status deployment/$ACK_DEPLOYMENT_NAME
