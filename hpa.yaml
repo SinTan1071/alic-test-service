@@ -25,7 +25,7 @@ spec:
       name: memory
       target:
         type: Utilization
-        averageUtilization: 82 # --- 内存目标利用率 80% ---
+        averageUtilization: 80 # --- 内存目标利用率 80% ---
 
   # --- 新增缩容策略 ---
   behavior:
