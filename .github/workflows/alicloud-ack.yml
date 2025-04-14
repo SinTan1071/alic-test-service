@@ -28,7 +28,7 @@ env:
   REGION_ID: cn-hangzhou
   REGISTRY: crpi-ibyuhsh8e7drc0ir.cn-hangzhou.personal.cr.aliyuncs.com
   NAMESPACE: sintan1071-test-acr-namespace
-  IMAGE: repo
+  IMAGE: sintan1071-test-acr-repo
   TAG: ${{ github.sha }}
   ACK_CLUSTER_ID: ${{ vars.ACK_CLUSTER_ID }}
   ACK_DEPLOYMENT_NAME: sintan1071-test-alic-db-service
