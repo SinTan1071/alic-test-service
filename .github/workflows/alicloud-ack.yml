@@ -106,11 +106,14 @@ jobs:
     - name: Set up Kustomize
       run: |-
         curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash /dev/stdin 3.8.6
-    - name: Deploy
-      run: |-
-        echo "$REGISTRY"/"$NAMESPACE"/"$IMAGE":"$TAG"
-        echo "$DB_USER"
-        ./kustomize edit set image REGISTRY/NAMESPACE/IMAGE:TAG=$REGISTRY/$NAMESPACE/$IMAGE:$TAG
+    - name: Deploy Application to ACK
+      env:
+          # 需要从 build job 获取 tag, 或者直接使用 env.TAG
+          IMAGE_TAG: ${{ needs.build.outputs.image_tag || env.TAG }} # 假设 build job 有输出，或者使用 env.TAG
+      run: |
+        # --- 修改这里：将 REGISTRY/NAMESPACE/IMAGE:TAG 改为 YOUR_IMAGE_PLACEHOLDER ---
+        ./kustomize edit set image YOUR_IMAGE_PLACEHOLDER="$REGISTRY/$NAMESPACE/$IMAGE:$IMAGE_TAG"
+        # --- 后续命令不变 ---
         ./kustomize build . | kubectl apply -f -
         kubectl rollout status deployment/$ACK_DEPLOYMENT_NAME
         kubectl get services -o wide
