@@ -12,7 +12,7 @@ spec:
     kind: Deployment
     name: sintan1071-test-alic-db-service # --- 确保指向正确的 Deployment 名称 ---
   minReplicas: 2 # --- 最小副本数 ---
-  maxReplicas: 10 # --- 最大副本数 (根据需要调整) ---
+  maxReplicas: 5 # --- 最大副本数 (根据需要调整) ---
   metrics:
   - type: Resource
     resource:
@@ -25,4 +25,18 @@ spec:
       name: memory
       target:
         type: Utilization
-        averageUtilization: 20 # --- 内存目标利用率 80% ---
+        averageUtilization: 82 # --- 内存目标利用率 80% ---
+
+  # --- 新增缩容策略 ---
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 30 # 稳定窗口：5分钟内不快速缩容
+      policies:
+      - type: Pods # 策略类型：按 Pod 数量
+        value: 1     # 值：每次最多移除 1 个 Pod
+        periodSeconds: 20 # 周期：在 60 秒内最多移除 1 个
+      # 可以添加更多策略，例如按百分比
+      # - type: Percent
+      #   value: 10 # 每次最多移除 10%
+      #   periodSeconds: 60
+  # --- 缩容策略结束 ---
