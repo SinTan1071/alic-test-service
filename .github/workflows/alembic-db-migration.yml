@@ -1,0 +1,39 @@
+name: Alembic DB Migration
+
+on:
+  push:
+    branches: [ "main" ] # 在推送到 main 分支时触发
+  workflow_dispatch:      # 允许手动触发
+
+jobs:
+  migrate_database:
+    name: Run Database Migrations
+    runs-on: ubuntu-latest
+    environment: production # 确保可以访问数据库相关的 Secrets 和 Variables
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11' # 或者你项目使用的 Python 版本
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # 确保 requirements.txt 包含 alembic, PyYAML 和数据库驱动 (如 psycopg2-binary)
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Run Alembic Migrations
+      env:
+        # 从 GitHub Secrets/Variables 获取数据库连接信息
+        # 这些环境变量会被 src/core/conf/conf.py 读取
+        DB_DRIVER: ${{ vars.DB_DRIVER || secrets.DB_DRIVER }} # 优先使用 Variable，如果不存在则使用 Secret
+        DB_USER: ${{ vars.DB_USER || secrets.DB_USER }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }} # 密码必须来自 Secret
+        DB_HOST: ${{ vars.DB_HOST || secrets.DB_HOST }}
+        DB_PORT: ${{ vars.DB_PORT || secrets.DB_PORT }}
+        DB_NAME: ${{ vars.DB_NAME || secrets.DB_NAME }}
+      run: alembic upgrade head # 执行迁移命令
