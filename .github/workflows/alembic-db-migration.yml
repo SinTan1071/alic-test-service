@@ -30,10 +30,10 @@ jobs:
       env:
         # 从 GitHub Secrets/Variables 获取数据库连接信息
         # 这些环境变量会被 src/core/conf/conf.py 读取
-        DB_DRIVER: ${{ vars.DB_DRIVER || secrets.DB_DRIVER }} # 优先使用 Variable，如果不存在则使用 Secret
-        DB_USER: ${{ vars.DB_USER || secrets.DB_USER }}
+        DB_DRIVER: ${{ vars.DB_DRIVER }} # 优先使用 Variable，如果不存在则使用 Secret
+        DB_USER: ${{ vars.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }} # 密码必须来自 Secret
-        DB_HOST: ${{ vars.DB_HOST || secrets.DB_HOST }}
-        DB_PORT: ${{ vars.DB_PORT || secrets.DB_PORT }}
-        DB_NAME: ${{ vars.DB_NAME || secrets.DB_NAME }}
+        DB_HOST: ${{ vars.DB_EXTERNAL_HOST }}
+        DB_PORT: ${{ vars.DB_EXTERNAL_PORT }}
+        DB_NAME: ${{ vars.DB_NAME }}
       run: alembic upgrade head # 执行迁移命令

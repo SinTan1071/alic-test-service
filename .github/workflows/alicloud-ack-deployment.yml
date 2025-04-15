@@ -49,7 +49,7 @@ jobs:
     - name: Login to ACR with Username and Password
       env:
         # 从 Secrets 获取用户名和密码
-        ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+        ACR_USERNAME: ${{ vars.ACR_USERNAME }}
         ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
       run: |
         # 使用 --password-stdin 更安全，避免密码出现在进程列表或日志中
@@ -76,8 +76,8 @@ jobs:
         # 推荐对非敏感信息使用 Variables (vars)，对敏感信息使用 Secrets (secrets)
         DB_DRIVER: ${{ vars.DB_DRIVER }} # 使用 vars，提供默认值
         DB_USER: ${{ vars.DB_USER }}
-        DB_HOST: ${{ vars.DB_HOST }}
-        DB_PORT: ${{ vars.DB_PORT }} # 使用 vars，提供默认值
+        DB_HOST: ${{ vars.DB_INTERNAL_HOST }}
+        DB_PORT: ${{ vars.DB_INTERNAL_PORT }} # 使用 vars，提供默认值
         DB_NAME: ${{ vars.DB_NAME }}
       run: |
         echo "apiVersion: v1
